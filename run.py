@@ -78,7 +78,7 @@ def post_images(status):
     :param status: Tweepy の status オブジェクト
     :return: なし
     """
-    BLOG_URL = "metyashiko.tumblr.com"
+    BLOG_URL = "mangatime-kirara.tumblr.com"
     caption = status.text + "\n\n" + "Source: https://" + status.extended_entities["media"][0]["display_url"]
     tags = "manga,manga time kirara,まんがタイムきらら," + extract_titles(status)
     params = {
@@ -126,6 +126,9 @@ def main():
         post_images(status)
         delete_images()
         time.sleep(3)
+        print("Posted")
+
+    print("Done")
 
 
 if __name__ == '__main__':
