@@ -62,13 +62,7 @@ def extract_titles(status):
     for ng in ngwords:
         titles = list(set(map(lambda x: x.replace(ng, ""), titles)))
 
-    # カンマ区切りの文字列にする
-    s = ""
-    for i, title in enumerate(titles):
-        s += title
-        if i != len(titles) - 1:
-            s += ","
-
+    s = ",".join(titles)
     return s
 
 
