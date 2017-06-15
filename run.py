@@ -104,8 +104,11 @@ def main():
     # 前の更新より新しい tweet を取得する
     for status in tweepy.Cursor(api.user_timeline, id="mangatimekirara").items():
         # 既にふぁぼってたら終了
-        if status.favorited == True:
-            break
+        if status.favorited:
+            if hasattr(status, "retweeted_status"):
+                continue
+            else:
+                break
 
         # ふぁぼっておく
         api.create_favorite(status.id)
