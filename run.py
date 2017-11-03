@@ -49,7 +49,7 @@ def extract_titles(status):
     「」『』【】内の文字列をカンマ区切りにして返す
     :return: str
     """
-    text = status.text
+    text = status.full_text
 
     patterns = ["「.+?」", "『.+?』", "【.+?】"]
     titles = []
