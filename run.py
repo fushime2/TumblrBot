@@ -30,7 +30,7 @@ def delete_images():
 
 
 def save_images(status):
-    """ 画像を ./IMAGE_PATH に保存する """
+    """ 画像を /IMAGE_PATH に保存する """
     for i, entry in enumerate(status.extended_entities["media"]):
         url = entry["media_url"]
         ext = url.split(".")[3]
@@ -99,10 +99,10 @@ def post_images(status):
 
 
 def main():
-    api = get_tweepy()  # Tweepy のインスタンス
+    api = get_tweepy()
 
     # 前の更新より新しい tweet を取得する
-    for status in tweepy.Cursor(api.user_timeline, id="mangatimekirara").items():
+    for status in tweepy.Cursor(api.user_timeline, id="mangatimekirara", tweet_mode="extended").items():
         # 既にふぁぼってたら終了
         if status.favorited:
             if hasattr(status, "retweeted_status"):
@@ -122,7 +122,6 @@ def main():
         save_images(status)
         post_images(status)
         delete_images()
-        time.sleep(3)
         print("Posted")
 
     print("Done")
