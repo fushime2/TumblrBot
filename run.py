@@ -11,8 +11,6 @@ import time
 import tweepy
 from tumblpy import Tumblpy
 
-IMAGE_PATH = "images"
-
 
 def get_tweepy():
     """ Tweepy のやつ """
@@ -21,27 +19,6 @@ def get_tweepy():
     auth = tweepy.OAuthHandler(ck, cs)
     auth.set_access_token(token, token_secret)
     return tweepy.API(auth)
-
-
-def delete_images():
-    """ /IMAGE_PATH 以下を全部消す """
-    for name in glob.glob(IMAGE_PATH + "\\*"):
-        os.remove(name)
-
-
-def save_images(status):
-    """ 画像を /IMAGE_PATH に保存する """
-    for i, entry in enumerate(status.extended_entities["media"]):
-        url = entry["media_url"]
-        ext = url.split(".")[3]
-        filename = "{}.{}".format(i, ext)
-        url += ":orig"  # 原寸大 url
-        try:
-            os.mkdir(IMAGE_PATH)
-        except FileExistsError:
-            pass
-
-        urllib.request.urlretrieve(url, IMAGE_PATH + "\\" + filename)
 
 
 def extract_titles(status):
@@ -81,15 +58,12 @@ def post_images(status):
         "tags": tags,
     }
 
-    images = []
+    image_urls = []
     for i, entry in enumerate(status.extended_entities["media"]):
-        url = entry["media_url"]
-        ext = url.split(".")[3]
-        filename = "{}.{}".format(i, ext)
-        images.append(IMAGE_PATH + "\\" + filename)
+        image_urls.append(entry["media_url"] + ":orig") # original size
 
-    for i, image in enumerate(images):
-        params["data[{}]".format(i)] = open(image, "rb")
+    for i, url in enumerate(image_urls):
+        params["data[{}]".format(i)] = urllib.request.urlopen(url)
 
     with open("tumblr_config.txt", "r") as f:
         ck, cs, token, token_secret = f.read().strip().split()
@@ -119,9 +93,7 @@ def main():
         if "media" not in status.extended_entities:
             continue
 
-        save_images(status)
         post_images(status)
-        delete_images()
         print("Posted")
 
     print("Done")
