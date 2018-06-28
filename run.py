@@ -85,7 +85,10 @@ def main():
                 break
 
         # ふぁぼっておく
-        api.create_favorite(status.id)
+        try:
+            api.create_favorite(status.id)
+        except tweepy.error.TweepError as err:
+            print("Error: {}".format(err))
 
         # 画像がない Tweet は無視
         if not hasattr(status, "extended_entities"):
