@@ -32,7 +32,10 @@ def extract_titles(status):
     titles = []
     for pattern in patterns:
         for word in re.findall(pattern, text):
-            titles.append(word)
+            for ng in ["試し読み", "http", "アニメ化", "発売"]:
+                if ng in word:
+                    break
+                titles.append(word)
 
     # かっこを消す
     ngwords = ['「', '」', '『', '』', '【', '】']
